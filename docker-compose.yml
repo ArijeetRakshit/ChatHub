@@ -1,0 +1,52 @@
+services:
+  redis:
+    container_name: redis
+    image: redis:latest
+    ports:
+    - "6379:6379"
+
+  chat-backend-1:
+    container_name: chat-backend-1
+    image: chat-backend-1-image
+    build:
+      context: ./chat-backend 
+    ports:
+      - "8081:8081"
+
+  chat-backend-2:
+    container_name: chat-backend-2
+    image: chat-backend-2-image
+    build:
+      context: ./chat-backend 
+    ports:
+      - "8082:8081"
+
+  auth-backend:
+    container_name: auth-backend
+    image: auth-backend-image
+    build:
+      context: ./auth-backend 
+    ports:
+      - "8080:8080" 
+
+  chat-client-1:
+    container_name: chat-client-1
+    image: chat-client-1-image
+    build:
+      context: ./client 
+    ports:
+      - "3000:3000"
+    depends_on:
+      - chat-backend-1 
+      - auth-backend
+
+  chat-client-2:
+    container_name: chat-client-2
+    image: chat-client-2-image
+    build:
+      context: ./client-2 
+    ports:
+      - "3001:3000"
+    depends_on:
+      - chat-backend-2 
+      - auth-backend
